@@ -23,7 +23,7 @@ function ListItems(props){
 import React from "react";
 
 function App() {
-  return (<div><NameForm/></div>);
+  return (<NameForm/>);
 }
 function isValidEmail(email) {
   return /\S+@\S+\.\S+/.test(email);
@@ -99,6 +99,75 @@ class NameForm extends React.Component {
   }
 }
 
+
+// ******lifting the state up
+
+// We lift up state to a common ancestor of components that need it, so that they can all share in the state. This allows us to more easily share state among all of these components that need rely upon it.
+
+function App() {
+  return (<div><NameForm/></div>);
+}
+class NameForm extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state={value:''};
+  }
+  nameChange=value=>{
+    this.setState({value:value});
+  }
+  render(){
+    return(
+      <div>
+      <h1> Name1:</h1>
+      <NameForm1 value={this.state.value} handleNameChange={this.nameChange}/>
+      <h1>Name2:</h1>
+      <NameForm2 value={this.state.value} handleNameChange={this.nameChange}/>
+      </div>
+    )
+  }
+}
+class NameForm1 extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.props.handleNameChange(event.target.value);
+  }
+
+  render() {
+    return (
+      <form >
+        <label>
+          Name:
+          <input type="text" value={this.props.value} onChange={this.handleChange} />
+        </label>
+      </form>
+    );
+  }
+}
+class NameForm2 extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.props.handleNameChange(event.target.value);
+  }
+
+  render() {
+    return (
+      <form >
+        <label>
+          Name:
+          <input type="text" value={this.props.value} onChange={this.handleChange} />
+        </label>
+      </form>
+    );
+  }
+}
 
 
 
